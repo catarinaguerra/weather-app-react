@@ -1,4 +1,6 @@
 import React from "react";
+import Loader from "react-loader-spinner";
+
 import "./App.css";
 
 function App() {
@@ -12,6 +14,7 @@ function App() {
         >
           Open Source Code in GitHub
         </a>
+        <Loader type="Puff" color="#00BFFF" height={100} width={100} />
       </header>
     </div>
   );
