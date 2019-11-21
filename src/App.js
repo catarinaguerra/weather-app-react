@@ -1,16 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Loader from "react-loader-spinner";
 import "bootstrap/dist/css/bootstrap.css";
 
 import "./App.css";
 
 function App() {
+  let [city, setCity] = useState("");
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    alert(`Searching for ${city}`);
+  }
+  function updateCity(event) {
+    setCity(event.target.value);
+  }
+
   return (
     <div className="App">
       <div className="container">
-        <form>
+        <form onSubmit={handleSubmit}>
           <br />
-          <input type="search" />
+          <input type="search" onChange={updateCity} />
           <input type="submit" value="Search" />
         </form>
         <br />
