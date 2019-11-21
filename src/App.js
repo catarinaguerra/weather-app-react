@@ -6,7 +6,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>Hello </p>
-        <a href="https://github.com/catarinaguerra/weather-app-react">
+        <a
+          className="App-link"
+          href="https://github.com/catarinaguerra/weather-app-react"
+        >
           Open Source Code in GitHub
         </a>
       </header>
