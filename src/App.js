@@ -1,57 +1,87 @@
 import React, { useState } from "react";
 import Loader from "react-loader-spinner";
 import "bootstrap/dist/css/bootstrap.css";
+import axios from "axios";
 
 import "./App.css";
 
 function App() {
-  let [city, setCity] = useState("");
+  const [ready, setReady] = useState(false);
+  const [weatherData, setWeatherData] = useState({});
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    alert(`Searching for ${city}`);
-  }
-  function updateCity(event) {
-    setCity(event.target.value);
+  function handleResponse(response) {
+    console.log(response.data);
+    setWeatherData({
+      temperature: response.data.main.temp,
+      wind: response.data.wind.speed,
+      city: response.data.name,
+      description: response.data.weather[0].description,
+      humidity: response.data.main.humidity,
+      iconUrl: "http://openweathermap.org/img/wn/10d@2x.png"
+    });
+    setReady(true);
   }
 
-  return (
-    <div className="App">
-      <div className="container">
-        <form onSubmit={handleSubmit}>
-          <br />
-          <input type="search" onChange={updateCity} />
-          <input type="submit" value="Search" />
-        </form>
-        <br />
-        <ul className="list-unstyled">
-          <li>Thursday, 21 Nov, 20:07</li>
-          <li>Partly Cloudy</li>
-        </ul>
-        <div className="row">
-          <div className="col-6">
-            <h1>Lisbon</h1>
-            <ul className="list-unstyled">
-              <li>Humidity:89%</li>
-              <li>Percipitation:0%</li>
-              <li>Wind: 6 Km/h</li>
-            </ul>
+  if (ready) {
+    return (
+      <div className="App">
+        <div className="container">
+          <div className="border rounded mt-5 text-left">
+            <div className="row">
+              <form className="border">
+                <br />
+                <div className="col-12 border">
+                  <input type="search" />
+                  <input type="submit" value="Search" />
+                </div>
+              </form>
+            </div>
+            <br />
+            <div className="row">
+              <ul className="list-unstyled border">
+                <li className="col-12">Thursday, 21 Nov, 20:07</li>
+              </ul>
+            </div>
+            <div className="row border">
+              <div className="col-6 border">
+                <h1>{weatherData.city}</h1>
+                <ul className="list-unstyled">
+                  <li>Humidity:{weatherData.humidity}%</li>
+                  <li>Wind: {weatherData.wind} Km/h</li>
+                </ul>
+              </div>
+              <div className="col-4 border border">
+                <div className="temperature border">
+                  {Math.round(weatherData.temperature)}
+                  <span className="sign-size border">
+                    <span>°</span>
+                    <small>C | F </small>
+                  </span>
+                  <span className="border">
+                    <img src={weatherData.iconUrl} />
+                  </span>
+                </div>
+                <p>{weatherData.description}</p>
+              </div>
+            </div>
           </div>
-          <div className="col-6">
-            <h2>13° C | F</h2>
-            <img src="http://openweathermap.org/img/wn/10d@2x.png" />
-          </div>
+
+          <a
+            className="App-link text-left"
+            href="https://github.com/catarinaguerra/weather-app-react"
+          >
+            Open Source Code in GitHub
+          </a>
         </div>
-
-        <a
-          className="App-link"
-          href="https://github.com/catarinaguerra/weather-app-react"
-        >
-          Open Source Code in GitHub
-        </a>
       </div>
-    </div>
-  );
+    );
+  } else {
+    let apiKey = "ce2ba46f91923c2e60910216838b8e09";
+    let city = "London";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(handleResponse);
+    return "Loading...";
+  }
 }
 
 export default App;
